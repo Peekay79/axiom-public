@@ -24,7 +24,8 @@ services:
       - PYTHONUNBUFFERED=1
       - FLASK_ENV=development
       - AXIOM_USE_SENTENCE_TRANSFORMERS=true
-      - MEMORY_POD_URL=http://localhost:8002
+      - MEMORY_API_PORT=5000
+      - MEMORY_POD_URL=http://localhost:5000
     # Keep container running even if main process fails
     tty: true
     stdin_open: true

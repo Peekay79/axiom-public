@@ -72,14 +72,8 @@ Stevebot uses a standardized world map format for representing entities, relatio
 
 ### Validation Commands
 ```bash
-# Validate using Makefile
-make schema
-
-# Direct validation
-python tools/validate_world_map.py world_map.json
-
-# Pre-commit hook validation
-pre-commit run check-jsonschema --files world_map.json
+# Validate using the shipped parser (pydantic)
+python -c "import json; from services.memory.world_map_models import parse_world_map; parse_world_map(json.load(open('world_map.json'))); print('✅ world_map.json parsed')"
 ```
 
 ### Validation Output
@@ -114,20 +108,16 @@ Older world maps used object/dictionary shapes:
 
 ### Normalization Process
 ```bash
-# Convert to canonical arrays (recommended)
-python tools/normalize_world_map.py world_map.json -o world_map.json
-
-# In-place normalization
-python tools/normalize_world_map.py world_map.json --in-place
-
-# Makefile shortcut
-make normalize
+# This public-safe tree does not ship the private normalization CLI.
+# The shipped parser (`services/memory/world_map_models.parse_world_map`) returns a normalized dict
+# as its second return value (canonical array shape).
+python -c "import json; from services.memory.world_map_models import parse_world_map; raw=json.load(open('world_map.json')); _typed,norm,_warn=parse_world_map(raw); print('✅ normalized entities=',len(norm.get('entities',[])),'relationships=',len(norm.get('relationships',[])))"
 ```
 
 ## Dual-Shape Parser
 
 ### Implementation
-- **Location**: `pods.memory.world_map_models.parse_world_map()`
+- **Location**: `services/memory/world_map_models.py` (`parse_world_map`)
 - **Input**: Raw JSON (dict or array format)
 - **Output**: Typed `WorldMap` object + normalized dict + warnings
 
@@ -153,29 +143,17 @@ class WorldMap(BaseModel):
 ## Validation Integration
 
 ### Pre-commit Hooks
-The repository includes automatic schema validation:
-
-```yaml
-# .pre-commit-config.yaml
-- repo: https://github.com/python-jsonschema/check-jsonschema
-  hooks:
-    - id: check-jsonschema
-      files: ^world_map\.json$
-      args: [--schemafile, docs/world_map.schema.json]
-```
+This public-safe tree does not currently include a `.pre-commit-config.yaml`.
+If you want JSON-schema validation, use `docs/world_map.schema.json` with
+your preferred tooling (e.g. `check-jsonschema`).
 
 ### CI Pipeline
-```yaml
-# .github/workflows/ci.yml
-- run: make schema  # Validates world_map.json in CI
-```
+N/A in the public-safe tree (no CI workflow is included here).
 
 ### Development Workflow
 ```bash
-# Before committing changes
-make schema           # Validate schema
-make normalize       # Convert to canonical format if needed
-pre-commit run --all-files  # Run all checks
+# Before committing changes (public-safe tree)
+python -c "import json; from services.memory.world_map_models import parse_world_map; parse_world_map(json.load(open('world_map.json'))); print('✅ world_map.json parsed')"
 ```
 
 ## Schema Evolution

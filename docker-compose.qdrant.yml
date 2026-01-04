@@ -14,7 +14,7 @@ version: '3.8'
 
 services:
   # Qdrant vector database
-  qdrant:
+  axiom_qdrant:
     image: qdrant/qdrant:latest
     container_name: axiom-qdrant
     restart: unless-stopped
@@ -23,22 +23,15 @@ services:
       - "6334:6334"  # gRPC API (optional)
     volumes:
       - qdrant_data:/qdrant/storage
-      - ./qdrant_config:/qdrant/config
     environment:
       - QDRANT__SERVICE__HTTP_PORT=6333
       - QDRANT__SERVICE__GRPC_PORT=6334
       - QDRANT__LOG_LEVEL=INFO
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
     networks:
       - axiom-network
 
   # Axiom Memory Backend with Qdrant integration
-  axiom-memory:
+  axiom_memory:
     build:
       context: .
       dockerfile: services/memory/Dockerfile
@@ -50,7 +43,7 @@ services:
       - ./.axiom-data:/app/data
       - memory_logs:/app/data/logs
     environment:
-      - QDRANT_HOST=qdrant
+      - QDRANT_HOST=axiom_qdrant
       - QDRANT_PORT=6333
       - USE_QDRANT_BACKEND=true
       - AXIOM_USE_SENTENCE_TRANSFORMERS=true
@@ -62,11 +55,8 @@ services:
       # AXIOM_SCORING_PROFILE=default
       # AXIOM_TOP_N=8
       # AXIOM_MMR_LAMBDA=0.4
-    depends_on:
-      qdrant:
-        condition: service_healthy
     healthcheck:
-      test: ["CMD", "/app/healthcheck.sh"]
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5000/ping && curl -fsS http://localhost:5000/readyz"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -82,10 +72,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - QDRANT_API_URL=http://qdrant:6333
-    depends_on:
-      qdrant:
-        condition: service_healthy
+      - QDRANT_API_URL=http://axiom_qdrant:6333
     networks:
       - axiom-network
     profiles:

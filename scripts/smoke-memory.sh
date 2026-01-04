@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Bring up just memory_api with the local override
-docker compose -f docker-compose.memory.yml up -d --build axiom_memory
+# Bring up Qdrant + Memory API (local dev)
+docker compose -f docker-compose.qdrant.yml up -d --build axiom_qdrant axiom_memory
 
 echo "→ Waiting 2s for startup..."
 sleep 2
