@@ -34,7 +34,7 @@ cp examples/world_map.example.json world_map.json
 
 # Run Memory API (local)
 python -m venv .venv && . .venv/bin/activate
-pip install -r services/memory/requirements.txt
+pip install -r services/memory/requirements-core.txt
 MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
 
 # Reload world map (if you've edited world_map.json)
@@ -111,8 +111,8 @@ python -c "import json; from services.memory.world_map_models import parse_world
 
 **Vector dependencies missing:**
 ```bash
-# Install service requirements (includes qdrant-client and sentence-transformers)
-pip install -r services/memory/requirements.txt
+# Install vector profile (includes qdrant-client + sentence-transformers)
+pip install -r services/memory/requirements-vector.txt
 ```
 
 **Qdrant connection failed:**

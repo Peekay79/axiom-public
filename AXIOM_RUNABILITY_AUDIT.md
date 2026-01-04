@@ -53,7 +53,7 @@ curl -fsS http://localhost:8002/ping && curl -fsS http://localhost:8002/readyz
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
-pip install -r services/memory/requirements.txt
+pip install -r services/memory/requirements-core.txt
 MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
 curl -fsS http://localhost:8002/health | python -m json.tool
 ```
@@ -66,13 +66,14 @@ curl -fsS http://localhost:8002/health | python -m json.tool
 ### Vector sync docs
 
 - ⚠️ **Docs were misleading**: referenced `pip install -e .[vector]` / extras that don’t exist (no `pyproject.toml`).
-- ✅ **Fixed**: updated to install via `services/memory/requirements.txt` and to use `docker compose -f docker-compose.qdrant.yml ...`.
+- ✅ **Fixed**: updated to install via `services/memory/requirements-vector.txt` for vector sync, and to use `docker compose -f docker-compose.qdrant.yml ...`.
 
 ## Core Dependencies & Entry Points
 
 ### Python dependencies
 
-- **Memory API**: `services/memory/requirements.txt`
+- **Memory API (core)**: `services/memory/requirements-core.txt` (no HF stack / no Rust)
+- **Memory API (vector)**: `services/memory/requirements-vector.txt` (HF/tokenizers; may require Rust)
 - **Vector adapter**: `services/vector/requirements.txt` and `services/vector/vector_requirements.txt` (note: these diverge)
 
 ### Primary entry points

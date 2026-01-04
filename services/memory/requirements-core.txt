@@ -1,0 +1,19 @@
+#
+# Axiom Memory API — Core (recommended)
+# -----------------------------------
+# Goal: run the Memory API in fallback mode (no local embeddings / no HF stack).
+#
+# This profile intentionally excludes anything that can pull in:
+# - tokenizers / transformers / sentence-transformers
+# - Rust toolchain requirements
+#
+# If you need semantic recall + local embeddings, install `requirements-vector.txt`.
+#
+flask
+flask-cors
+requests
+pydantic>=2.0.0,<3.0.0
+
+# Safe, optional vector DB client (imported by the Memory API even in fallback mode).
+qdrant-client>=1.8.0
+

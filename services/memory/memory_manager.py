@@ -138,8 +138,29 @@ _workspace_root = os.path.dirname(
 if _workspace_root not in sys.path:
     sys.path.insert(0, _workspace_root)
 # [HEALTH_CHECK] Import health check utilities for memory pod
-from axiom_health_check import mark_error, mark_ready, setup_health_cleanup
-from logbook import log_memory_pruned, log_memory_retrieved, log_memory_stored
+try:
+    from axiom_health_check import mark_error, mark_ready, setup_health_cleanup  # type: ignore
+except Exception:  # pragma: no cover - optional in public-safe tree
+    def mark_error(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
+
+    def mark_ready(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
+
+    def setup_health_cleanup(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
+
+try:
+    from logbook import log_memory_pruned, log_memory_retrieved, log_memory_stored  # type: ignore
+except Exception:  # pragma: no cover - optional in public-safe tree
+    def log_memory_pruned(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
+
+    def log_memory_retrieved(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
+
+    def log_memory_stored(*args, **kwargs):  # type: ignore[no-untyped-def]
+        return None
 
 # [QDRANT_BACKEND] Import memory backend interface for Qdrant integration (dynamic)
 try:
@@ -148,9 +169,28 @@ try:
         MemoryBackendFactory,
         MemoryFilter,
     )
-except ImportError as e:
-    # Memory backend interface is required; re-raise with context
-    raise
+except Exception:  # pragma: no cover - optional in public-safe tree
+    # Public-safe tree: keep the Memory API runnable without the private backend interface.
+    # Tests can still patch these symbols.
+    class MemoryBackendError(Exception):
+        pass
+
+    class MemoryFilter(dict):
+        pass
+
+    class MemoryBackendFactory:
+        _REGISTRY: dict[str, object] = {}
+
+        @classmethod
+        def register_backend(cls, name: str, backend_cls):  # type: ignore[no-untyped-def]
+            cls._REGISTRY[name] = backend_cls
+
+        @classmethod
+        def create_backend(cls, name: str, **kwargs):  # type: ignore[no-untyped-def]
+            backend_cls = cls._REGISTRY.get(name)
+            if backend_cls is None:
+                raise MemoryBackendError(f"backend_not_registered:{name}")
+            return backend_cls(**kwargs)
 
 # Dynamic import of Qdrant backend to avoid circular imports
 import importlib
