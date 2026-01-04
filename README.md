@@ -7,6 +7,16 @@ This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution 
 - [Systems overview (services + agent layer)](docs/2SYSTEMS_OVERVIEW.md)
 - [System architecture (services)](docs/axiom_architecture_map.md)
 
+## Show and tell
+
+If you build something with Axiom — even a small experiment — I’d love to see it.
+Open a GitHub issue with a short description, screenshots/logs if useful, and what you’re trying to achieve.
+Bugs and rough edges are expected; helpful reports and PRs are very welcome.
+
+- `SHOW: <what you built>`
+- `QUESTION: <topic>`
+- `BUG: <what broke>`
+
 ## Quickstart (dev)
 
 On Homebrew Python (macOS), PEP 668 marks the system environment as externally managed; use a virtual environment for installs.
