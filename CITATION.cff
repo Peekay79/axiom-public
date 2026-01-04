@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Axiom Public"
+type: software
+authors:
+  - given-names: "Kurt"
+    family-names: "Bannister"
+abstract: "Service-layer primitives (memory/vector/cockpit) plus an optional agent-layer package (CHAMP, reflection, journaling triggers, bounded exploration, graph hooks)."
+repository-code: "https://github.com/Peekay79/axiom-public"
+version: "0.1.0"
+date-released: "2026-01-04"
+license: "PolyForm Noncommercial License 1.0.0"
