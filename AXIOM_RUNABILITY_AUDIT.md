@@ -32,7 +32,7 @@ This audit focuses on the public-safe `axiom-public` tree and the “can a compe
 
 ## Doc Reality Check
 
-### Full Docker (Qdrant + Memory)
+### Docker + Qdrant (Quick Start)
 
 - ✅ **Works** (after minor fixes in this audit)
 - **Commands**:
@@ -43,7 +43,7 @@ docker compose -f docker-compose.qdrant.yml up --build
 curl -fsS http://localhost:8002/ping && curl -fsS http://localhost:8002/readyz
 ```
 
-### Local dev (Python: Memory API)
+### Local Python (Memory API)
 
 - ⚠️ **Works, but only if imports resolve correctly**
 - **Notes**:
@@ -114,6 +114,14 @@ curl -fsS http://localhost:8002/health | python -m json.tool
 - **Optional auth**:
   - `AXIOM_AUTH_ENABLED=true`
   - `AXIOM_AUTH_TOKEN=...`
+
+### Optional: Protecting your Memory API (bearer token)
+
+If you set `AXIOM_AUTH_ENABLED=true`, non-probe endpoints require:
+
+- `Authorization: Bearer <AXIOM_AUTH_TOKEN>`
+
+This is **off by default** and is intended as a lightweight guardrail. For any internet-facing deployment, also put the service behind HTTPS / a reverse proxy (out of scope here).
 
 ### Notes / TODOs
 

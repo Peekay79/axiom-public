@@ -249,8 +249,9 @@ print('Entities type:', type(data.get('entities')))
 print('Relationships type:', type(data.get('relationships')))
 "
 
-# Test normalization
-python tools/normalize_world_map.py world_map.json --dry-run
+# Note: the public-safe tree does not ship the private normalization CLI.
+# To see the normalized canonical array-shape output, use:
+python -c "import json; from services.memory.world_map_models import parse_world_map; raw=json.load(open('world_map.json')); _typed,norm,_warn=parse_world_map(raw); print(norm)"
 ```
 
 For ingestion details, see `docs/INGEST_WORLD_MAP.md`. For vector setup, see `docs/VECTOR_SYNC.md`.

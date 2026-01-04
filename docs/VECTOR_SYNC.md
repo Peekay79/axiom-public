@@ -157,8 +157,8 @@ docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant
 
 **Vector dependencies missing:**
 ```bash
-# Install vector extras
-pip install -e .[vector]
+# Install service requirements (public-safe tree)
+pip install -r services/memory/requirements.txt
 
 # Check installation
 python -c "import sentence_transformers; print('OK')"
@@ -171,8 +171,11 @@ python -c "import torch; print('OK')"
 curl $AX_QDRANT_URL/collections | jq
 
 # Collections are created automatically on first use
-# Run ingestion to create collections
-python ingest_world_map.py --dry-run --vector-sync
+# If you have `world_map.json`, start the Memory API and hit a vector endpoint
+# (this will create collections lazily when the vector backend is enabled).
+# Example:
+#   MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
+#   curl -fsS http://localhost:8002/vector/query -H 'Content-Type: application/json' -d '{"query":"hello","top_k":3}'
 ```
 
 **Performance issues:**
@@ -189,7 +192,7 @@ echo $EMBEDDING_MODEL  # Should be all-MiniLM-L6-v2
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=DEBUG
-python ingest_world_map.py --vector-sync --dry-run --verbose
+# (No ingestion CLI in this public-safe tree; prefer the Memory API + curl checks.)
 
 # Test embedding generation
 python -c "

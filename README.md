@@ -53,6 +53,8 @@ See [LICENSE](./LICENSE) for full terms.
 
 ### Quick start (local-only)
 
+For a full, friendly walkthrough, see `1GETTING_STARTED.md`.
+
 - **Install**:
   - `python -m venv .venv && . .venv/bin/activate`
   - `pip install -r services/memory/requirements.txt`

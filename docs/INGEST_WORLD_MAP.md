@@ -22,7 +22,7 @@ Instead, the recommended local/demo workflow is:
 - **Schema v1**: Uses arrays for `entities` and `relationships` with required `version` field (`1.x.y`)
 - **Canonical format**: See `docs/SCHEMA.md` for complete specification
 - **Dual-shape support**: Accepts both legacy dict-shaped and canonical array-shaped input
-- **Schema validation**: Use `make schema` or `python tools/validate_world_map.py world_map.json`
+- **Schema validation**: Use the shipped parser (pydantic) from `services/memory/world_map_models.py` (see Troubleshooting)
 
 ## Command Line Usage
 
@@ -78,12 +78,9 @@ N/A in the public-safe tree (the ingestion CLI is not included).
 
 ### Manual Normalization
 ```bash
-# Normalize to canonical arrays (recommended)
-python tools/normalize_world_map.py world_map.json -o world_map.json
-make normalize
-
-# In-place normalization
-python tools/normalize_world_map.py world_map.json --in-place
+# This public-safe tree does not ship the private normalization CLI.
+# The shipped parser returns a normalized dict as its second return value:
+python -c "import json; from services.memory.world_map_models import parse_world_map; raw=json.load(open('world_map.json')); _typed,norm,_warn=parse_world_map(raw); print('✅ normalized entities=',len(norm.get('entities',[])),'relationships=',len(norm.get('relationships',[])))"
 ```
 
 ## Success Indicators
@@ -131,11 +128,8 @@ docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant  # Start Qdrant i
 ### Debugging
 
 ```bash
-# Enable verbose logging
-python ingest_world_map.py --dry-run --verbose
-
-# Check world map structure
-python tools/validate_world_map.py world_map.json
+# Check world map structure via the shipped parser
+python -c "import json; from services.memory.world_map_models import parse_world_map; parse_world_map(json.load(open('world_map.json'))); print('✅ world_map.json parsed')"
 
 # Test vector connectivity
 curl http://localhost:6333/collections

@@ -1,26 +1,48 @@
 # Getting Started with Axiom Public
 
-Axiom Public is a **public-safe** distribution of Axiom intended for **local development and demos**. This guide gets you to a working **Axiom Memory API** quickly, either with **Docker (recommended)** or by running the service directly with **Python**.
+Axiom is a research-grade cognitive architecture designed to support persistent identity, structured memory, belief tracking, and autonomous reasoning across time.
+
+This guide explains how to:
+
+- run Axiom locally
+- start the core services (“pods”)
+- configure memory + vector recall
+- verify the system is working
+
+If you get stuck, open an issue — or email `kurtbannister79@gmail.com` with subject line `AXIOM LICENSING`.
 
 - [Prerequisites](#1-prerequisites)
-- [Repository layout (brief)](#2-repository-layout-brief)
-- [Quick Start (Docker + Qdrant)](#3-quick-start-docker--qdrant)
-- [Quick Start (Local Python Memory API)](#4-quick-start-local-python-memory-api)
-- [Basic health & sanity checks](#5-basic-health--sanity-checks)
-- [Optional: Protecting your Memory API (bearer token)](#6-optional-protecting-your-memory-api-bearer-token)
-- [Optional: Cockpit status server](#7-optional-cockpit-status-server)
-- [Next steps](#8-next-steps)
+- [System overview](#2-system-overview)
+- [Repository layout (brief)](#3-repository-layout-brief)
+- [Quick Start — Docker + Qdrant](#4-quick-start--docker--qdrant)
+- [Quick Start — Local dev (no vector required)](#5-quick-start--local-dev-no-vector-required)
+- [Enable semantic recall (Qdrant)](#6-enable-semantic-recall-qdrant)
+- [Basic health & sanity checks](#7-basic-health--sanity-checks)
+- [Optional: Protecting your Memory API (bearer token)](#8-optional-protecting-your-memory-api-bearer-token)
+- [Optional: Cockpit status server](#9-optional-cockpit-status-server)
+- [Next steps](#10-next-steps)
 
 ## 1. Prerequisites
 
 - **Supported OS**: Linux or macOS.
-- **Python**: **3.10** (matches the service Dockerfiles and the expected runtime).
-- **Tools**:
-  - `git`
-  - `python`/`python3` with `venv`
-  - Optional (Docker route): Docker + Docker Compose v2 (`docker compose`)
+- **Python**: **3.10+** (service containers use Python 3.10; local dev should use 3.10 if possible).
+- **Optional**: Docker + Docker Compose v2 (`docker compose`) for the container route.
+- **Expected familiarity**: basic Git, Python venvs, and reading `.env` files.
 
-## 2. Repository layout (brief)
+## 2. System overview
+
+Axiom Public’s runnable “core” is the **Memory API**, optionally backed by **Qdrant** for semantic recall.
+
+- **Memory API (“Memory pod”)**: episodic/semantic memory + journaling + belief surfaces, served over HTTP.
+- **Vector backend (Qdrant)**: optional; enables semantic recall and vector queries.
+- **Cockpit** (optional): aggregates “signal files” into a status endpoint for observability.
+
+The system is designed to:
+
+- run in **fallback** mode (no vector DB)
+- or switch to **Qdrant-backed** semantic recall when available
+
+## 3. Repository layout (brief)
 
 - `services/`: runnable services (Memory, Vector, Cockpit)
 - `src/axiom/`: core library modules (config/memory/retrieval/etc.)
@@ -28,19 +50,18 @@ Axiom Public is a **public-safe** distribution of Axiom intended for **local dev
 - `scripts/`: smoke checks and operational helpers
 - `docs/`: deeper design and subsystem docs
 
-## 3. Quick Start (Docker + Qdrant)
+## 4. Quick Start — Docker + Qdrant
 
-This is the simplest path to a working stack: **Qdrant + Memory API**.
+This is the easiest path to a working stack (**Qdrant + Memory API**).
 
 ```bash
-git clone https://github.com/<ORG_OR_USER>/axiom-public.git
+git clone https://github.com/Peekay79/axiom-public.git
 cd axiom-public
 
 # Local env file (safe defaults). Do NOT commit your .env.
 cp configs/.env.example .env
 
 # No mandatory edits are required for a first run.
-
 docker compose -f docker-compose.qdrant.yml up --build
 ```
 
@@ -51,39 +72,30 @@ curl -fsS http://localhost:8002/ping
 curl -fsS http://localhost:8002/readyz
 ```
 
-Optional: run the bundled smoke script (brings up services if needed):
+Optional: run the bundled smoke script (brings up services in the background):
 
 ```bash
 ./scripts/smoke-memory.sh
 ```
 
-## 4. Quick Start (Local Python Memory API)
+## 5. Quick Start — Local dev (no vector required)
 
-This runs the Memory API directly on your machine (no Docker).
+This is the fastest way to get the Memory API running locally (no Docker).
 
 ```bash
-git clone https://github.com/<ORG_OR_USER>/axiom-public.git
+git clone https://github.com/Peekay79/axiom-public.git
 cd axiom-public
 
-python -m venv .venv
-. .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 
 pip install -r services/memory/requirements.txt
 
-# Run Memory API on port 8002
+# Run the Memory API on port 8002 (recommended default for this repo)
 MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
 ```
 
-Then:
-
-```bash
-curl -fsS http://localhost:8002/ping
-curl -fsS http://localhost:8002/readyz
-```
-
-## 5. Basic health & sanity checks
-
-### Core probes
+Check health:
 
 ```bash
 curl -fsS http://localhost:8002/ping
@@ -91,27 +103,70 @@ curl -fsS http://localhost:8002/readyz
 curl -fsS http://localhost:8002/health | python -m json.tool
 ```
 
-### World map (optional demo data)
+You now have a local Memory API with:
 
-The Memory API auto-loads `world_map.json` if present. You can start with the example:
+- fallback memory behavior (even without Qdrant)
+- journaling and belief endpoints
+- world-map endpoints (if you provide a `world_map.json`)
+
+## 6. Enable semantic recall (Qdrant)
+
+Start Qdrant locally (Docker):
+
+```bash
+docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant
+```
+
+Then configure Axiom (in `.env` at repo root):
+
+```bash
+cp configs/.env.example .env
+$EDITOR .env
+```
+
+Minimum recommended values (self-hosted Qdrant):
+
+```bash
+USE_QDRANT_BACKEND=true
+QDRANT_URL=http://127.0.0.1:6333
+VECTOR_PATH=qdrant
+```
+
+Restart the Memory API (so it picks up `.env` changes):
+
+```bash
+MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
+```
+
+Verify Qdrant is reachable:
+
+```bash
+curl -fsS "$QDRANT_URL/health"
+curl -fsS "$QDRANT_URL/collections"
+```
+
+## 7. Basic health & sanity checks
+
+```bash
+curl -fsS http://localhost:8002/ping
+curl -fsS http://localhost:8002/readyz
+curl -fsS http://localhost:8002/health | python -m json.tool
+```
+
+Optional world-map sanity (example data):
 
 ```bash
 cp examples/world_map.example.json world_map.json
-
-# reload without restarting the server
 curl -fsS -X POST http://localhost:8002/world_map/reload | python -m json.tool
 curl -fsS http://localhost:8002/world_map/entity/example_person | python -m json.tool
 ```
 
-## 6. Optional: Protecting your Memory API (bearer token)
+## 8. Optional: Protecting your Memory API (bearer token)
 
-The public tree includes an **optional** bearer-token guard for HTTP endpoints.
+The public tree includes an optional bearer-token guard for HTTP endpoints.
 
 - **Off by default**
-- Useful for local demos on shared networks
-- For any serious deployment, you should also put it behind HTTPS / a reverse proxy (out of scope here)
-
-In your environment:
+- For any serious internet-facing deployment, also put this behind HTTPS / a reverse proxy (out of scope here)
 
 ```bash
 export AXIOM_AUTH_ENABLED=true
@@ -125,21 +180,18 @@ curl -fsS http://localhost:8002/health \
   -H "Authorization: Bearer ${AXIOM_AUTH_TOKEN}"
 ```
 
-## 7. Optional: Cockpit status server
+## 9. Optional: Cockpit status server
 
 Cockpit is a tiny status/metrics server that reads “signal files” from `COCKPIT_SIGNAL_DIR` (default `axiom_boot/`).
 
 ```bash
-# In the same venv as the Memory API
-python -m services.cockpit.cockpit_server
-
-# Then:
+python3 -m services.cockpit.cockpit_server
 curl -fsS http://localhost:8088/status/cockpit | python -m json.tool
 ```
 
-## 8. Next steps
+## 10. Next steps
 
 - `AXIOM_RUNABILITY_AUDIT.md`: run surfaces, known gaps, and quick checks
-- `docs/INGEST_WORLD_MAP.md`: how to use world-map endpoints in the public tree
-- `docs/HYBRID_RETRIEVAL.md`: retrieval design notes (if you’re exploring recall/search behavior)
+- `docs/INGEST_WORLD_MAP.md`: using world-map endpoints in the public tree
+- `docs/HYBRID_RETRIEVAL.md`: retrieval design notes
 
