@@ -4,71 +4,54 @@ This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution 
 
 ## Quickstart (dev)
 
+On Homebrew Python (macOS), PEP 668 marks the system environment as externally managed; use a virtual environment for installs.
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
 python -m pip install -e .
-```
-
-```bash
 python -c "import axiom_agent"
 ```
 
-On Homebrew Python (macOS), this is required due to PEP 668 / externally-managed environments.
-
 ## License & Use
 
-Axiom is **source-available** and free to use for **personal, academic, and research** work.
+Licensed under the **PolyForm Noncommercial License 1.0.0**. See [LICENSE](./LICENSE) for terms.
 
-It is licensed under the **PolyForm Noncommercial License 1.0.0**, with an explicit path
-to commercial licensing for aligned partners.
+Axiom is source-available and intended for personal, academic, research, and other noncommercial use. Commercial use is not permitted under the default license.
 
-You may, under the default license:
+Examples of permitted use (non-exhaustive):
 
-- ✅ Run and modify Axiom for personal projects, learning, and experimentation  
-- ✅ Use Axiom in academic and research settings  
-- ✅ Use it internally for non-revenue-generating prototypes and exploration  
-- ✅ Share improvements and forks under the same non-commercial terms  
+- ✅ Run and modify Axiom for personal projects, learning, and experimentation
+- ✅ Use Axiom in academic and research settings
+- ✅ Use it internally for noncommercial prototypes and exploration
 
-You may **not**, under the default license:
+Examples of commercial use not permitted under the default license (non-exhaustive):
 
-- ❌ Sell Axiom or Axiom-derived systems as a paid product or service  
-- ❌ Embed Axiom in a commercial SaaS or platform  
-- ❌ Use Axiom in revenue-generating business operations  
-- ❌ Wrap Axiom in a closed, monetised offering without a separate license  
+- ❌ Offer this software or derivative works as a paid product or service
+- ❌ Use it within a revenue-generating platform or workflow
+- ❌ Deploy it in support of commercial business operations
+- ❌ Use it in exchange for money, equity, or other commercial benefit
 
 ### Commercial Use & Partnerships
 
-Axiom **is** intended to be used in the real world — just not as free
-fuel for opaque, fully-commercial products.
+Commercial rights may be available via separate licensing for aligned teams.
 
-If you’d like to:
-
-- run Axiom in production,
-- embed it into a paid product or platform,
-- or build a commercial service on top of Axiom,
-
-we’re open to **commercial and partnership licensing** (including revenue-share
-and co-development arrangements).
-
-📩 To discuss commercial use, reach out via:
-`kurtbannister79@gmail.com`  
-Please include **"AXIOM LICENSING"** in the email subject line so it doesn’t get lost.
+To discuss commercial use, **open a GitHub issue titled “AXIOM LICENSING”**.
 
 ### Ethical Use
 
-Axiom is not licensed for systems whose primary purpose is:
+The license includes an “Ethical Use Notice” that prohibits using Axiom to develop or deploy systems whose primary purpose is:
 
 - physical harm,
 - mass surveillance or repression, or
-- violation of fundamental human rights.
+- violation of applicable law or fundamental human rights.
 
 See [LICENSE](./LICENSE) for full terms.
 
 ### Quick start (local-only)
 
-For a full, friendly walkthrough, see `1GETTING_STARTED.md`.
+For a full, friendly walkthrough, see `./1GETTING_STARTED.md`.
 
 - **Install**:
   - `python -m venv .venv && . .venv/bin/activate`
