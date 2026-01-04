@@ -2,6 +2,8 @@
 
 This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution of the private Axiom repo. It is intended for **local development and demos** only.
 
+Axiom is a modular memory + recall stack (Flask Memory API, optional Qdrant vector recall) plus an optional agent layer (CHAMP decisioning, reflection/journaling, wonder exploration, and graph hooks).
+
 ## Docs
 
 - [Systems overview (services + agent layer)](docs/2SYSTEMS_OVERVIEW.md)
@@ -88,6 +90,10 @@ Optional (advanced): enable vector + embeddings:
 - **Scripts**: `scripts/`
 - **Tests**: `tests/`
 
+## GitHub Topics (recommended)
+
+For better discoverability, maintainers should set repository topics in the **GitHub UI** (Settings → Topics): `qdrant`, `rag`, `memory`, `vector-database`, `retrieval`, `agents`, `llm`, `flask`, `embeddings`, `journaling`, `decision-engine`, `cognitive-architecture`.
+
 ## Demo (no install)
 
 Run:
@@ -103,4 +109,19 @@ Optional rollback demo (expected non-zero):
 ```bash
 AXIOM_DEMO_FORCE_FAIL=1 ./apps/run_demo.sh
 ```
+
+## Search keywords
+
+- qdrant
+- vector database
+- embeddings
+- retrieval
+- RAG
+- memory
+- LLM agents
+- journaling
+- decision engine
+- Flask
+- semantic search
+- graph
 
