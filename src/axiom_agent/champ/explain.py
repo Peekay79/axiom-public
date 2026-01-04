@@ -7,7 +7,7 @@ from .engine import ChampDecisionEngine, ChampMetrics, Decision
 
 def explain_champ_decision(metrics: ChampMetrics, decision: Decision) -> Dict[str, Any]:
     """
-    Explain the demo CHAMP decision in a simple, structured way.
+    Explain a CHAMP decision in a simple, structured way (demo-friendly, dependency-free).
     """
     engine = ChampDecisionEngine()
     score = engine.score(metrics)
@@ -23,6 +23,10 @@ def explain_champ_decision(metrics: ChampMetrics, decision: Decision) -> Dict[st
         "score": score,
         "contributions": contributions,
         "weights": dict(w),
-        "inputs": {"confidence": metrics.confidence, "payoff": metrics.payoff, "tempo": metrics.tempo},
+        "inputs": {
+            "confidence": metrics.confidence,
+            "payoff": metrics.payoff,
+            "tempo": metrics.tempo,
+        },
     }
 

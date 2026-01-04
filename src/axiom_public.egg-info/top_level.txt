@@ -1,2 +1,0 @@
-axiom
-axiom_agent

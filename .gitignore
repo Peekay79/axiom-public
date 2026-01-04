@@ -9,6 +9,12 @@
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+build/
+dist/
+*.sqlite
+*.db
+*.jsonl
 
 # Logs / runtime data (high PII risk)
 logs/

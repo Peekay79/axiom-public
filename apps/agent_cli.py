@@ -8,8 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from axiom_agent.champ.engine import ChampDecisionEngine, ChampMetrics
-from axiom_agent.champ.explainability import explain_champ_decision
-from axiom_agent.memory.local_store import LocalStoreAdapter
+from axiom_agent.champ.explain import explain_champ_decision
+from axiom_agent.integrations.local_store import LocalStoreAdapter
 
 
 def _utc_now_iso() -> str:

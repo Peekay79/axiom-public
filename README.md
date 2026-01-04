@@ -119,3 +119,9 @@ Run:
 
 This uses `PYTHONPATH=src` and does not require pip/venv; it is intended as a quick sanity check.
 
+Optional rollback demo (expected non-zero):
+
+```bash
+AXIOM_DEMO_FORCE_FAIL=1 ./apps/run_demo.sh
+```
+

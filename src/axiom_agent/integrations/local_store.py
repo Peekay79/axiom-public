@@ -21,7 +21,7 @@ def _ensure_dir(path: str) -> None:
 @dataclass
 class LocalStoreAdapter:
     """
-    Tiny local store adapter (SQLite) for the demo.
+    Tiny local store adapter (SQLite) for the offline demo.
 
     Supports explicit begin/commit/rollback to demonstrate transactional behavior.
     """
@@ -88,3 +88,4 @@ class LocalStoreAdapter:
 
     def close(self) -> None:
         self._conn.close()
+
