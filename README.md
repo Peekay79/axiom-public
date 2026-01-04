@@ -90,9 +90,9 @@ Optional (advanced): enable vector + embeddings:
 - **Scripts**: `scripts/`
 - **Tests**: `tests/`
 
-## GitHub Topics (recommended)
+## GitHub Topics 
 
-For better discoverability, maintainers should set repository topics in the **GitHub UI** (Settings → Topics): `qdrant`, `rag`, `memory`, `vector-database`, `retrieval`, `agents`, `llm`, `flask`, `embeddings`, `journaling`, `decision-engine`, `cognitive-architecture`.
+`qdrant`, `rag`, `memory`, `vector-database`, `retrieval`, `agents`, `llm`, `flask`, `embeddings`, `journaling`, `decision-engine`, `cognitive-architecture`.
 
 ## Demo (no install)
 
