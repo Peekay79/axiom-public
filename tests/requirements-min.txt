@@ -1,0 +1,7 @@
+pytest>=8.2.0
+jsonschema>=4.21.1
+pytest
+requests
+httpx
+qdrant-client
+# Phase 31: no additional dependencies required

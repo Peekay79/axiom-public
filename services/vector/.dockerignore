@@ -1,0 +1,4 @@
+*
+!pods/vector/**
+!vector_requirements.txt
+!vector_adapter.py

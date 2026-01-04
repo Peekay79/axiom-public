@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  axiom_qdrant:
+    ports:
+      - "8011:6333"
+  axiom_memory:
+    ports:
+      - "8002:5000"

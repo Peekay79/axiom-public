@@ -1,0 +1,4 @@
+collections:
+  memory: "axiom_memories"
+  beliefs: "axiom_beliefs"
+  archive: "axiom_memory_archives"

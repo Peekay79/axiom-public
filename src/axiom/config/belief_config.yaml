@@ -1,0 +1,17 @@
+# Belief Engine configuration
+# Safe defaults; override via environment or this file.
+
+thresholds:
+  SIM_THRESHOLD: 0.85
+  STRONG_CONTRADICTION_THRESHOLD: 0.7
+
+penalties:
+  BASE_PENALTY: 0.2
+  OPPOSITE_POLARITY_MULTIPLIER: 1.5
+
+modes:
+  TAGGER_MODE: heuristic
+  ALIGNMENT_ENABLED: true
+
+SCOPE_POLICY: intra_only
+REFRESH_SEC: 300

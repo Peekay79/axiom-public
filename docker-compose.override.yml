@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  axiom_qdrant:
+    ports:
+      - "8011:6333"  # HTTP (dev parity with prod)
+      # - "8013:6334"  # gRPC optional
+
+  axiom_memory:
+    ports:
+      - "8002:5000"  # Memory: host 8002 -> container 5000
+
+  # Optional: Vector adapter service (not required for prod)
+  vector:
+    build:
+      context: .
+      dockerfile: services/vector/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - axiom_qdrant
+    environment:
+      USE_QDRANT_BACKEND: "1"
+      VECTOR_POD_URL: http://axiom_qdrant:6333
+      QDRANT_PORT: "6333"
+    ports:
+      - "8012:5001"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s

@@ -1,0 +1,28 @@
+# Secrets / local config
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Local caches / virtualenvs
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs / runtime data (high PII risk)
+logs/
+*.log
+journal/
+journals/
+simulation_logs/
+demo_output/
+data/
+
+# Local world map (private)
+world_map.json
+
+# Vector DB / containers
+qdrant_data/
+axiom_qdrant_data/
+

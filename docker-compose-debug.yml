@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  memory_api:
+    build:
+      context: .
+      dockerfile: services/memory/Dockerfile
+    command: python3 -m pods.memory.pod2_memory_api
+    ports:
+      - "5000:5000"
+    restart: "no"  # Disable auto-restart for debugging
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:5000/ping && curl -fsS http://localhost:5000/readyz || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=development
+      - AXIOM_USE_SENTENCE_TRANSFORMERS=true
+      - MEMORY_POD_URL=http://localhost:8002
+    # Keep container running even if main process fails
+    tty: true
+    stdin_open: true

@@ -1,0 +1,13 @@
+flask
+flask-cors
+python-dotenv
+requests
+fsspec>=2023.5.0,<2024.0.0  # Required by huggingface-hub 0.33.4+
+pydantic>=2.0.0,<3.0.0
+protobuf>=4.21.0
+qdrant-client>=1.8.0  # For optional Qdrant vector memory support
+sentence-transformers==2.2.2
+transformers<4.40
+huggingface-hub<0.15
+jsonschema
+psutil

@@ -1,0 +1,10 @@
+huggingface_hub==0.14.1
+sentence-transformers==2.2.2
+psutil==5.9.8
+tqdm==4.66.4
+requests==2.31.0
+aiohttp
+# numpy pinned for compatibility with PyTorch/Transformers/SpaCy/Scikit-learn
+numpy>=1.24.0,<2.2.0
+Flask==2.2.5
+fsspec>=2023.5.0,<2024.0.0  # Required by huggingface-hub 0.33.4+

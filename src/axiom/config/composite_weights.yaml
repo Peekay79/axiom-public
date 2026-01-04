@@ -1,0 +1,59 @@
+profiles:
+  # default (balanced): aims for an even blend of similarity, recency, credibility, and confidence,
+  # with modest belief/usage/novelty multipliers for general-purpose retrieval.
+  default:
+    w_sim: 1.0
+    w_rec: 0.6
+    w_cred: 0.5
+    w_conf: 0.3
+    w_bel: 0.4
+    w_use: 0.2
+    w_nov: 0.1
+    decay_lambda: 0.015
+    # Belief alignment & contradictions knobs
+    beliefs_enabled: true
+    belief_alpha: 0.1
+    belief_importance_boost: 0.1
+    contradictions_enabled: true
+    belief_conflict_penalty: 0.05
+  # news (recency-heavy): emphasizes freshness for time-sensitive or fast-changing topics.
+  news:
+    w_rec: 1.0
+    w_cred: 0.7
+    w_bel: 0.3
+    decay_lambda: 0.03
+    beliefs_enabled: true
+    belief_alpha: 0.1
+    belief_importance_boost: 0.05
+    contradictions_enabled: true
+    belief_conflict_penalty: 0.05
+  # evergreen (credibility/importance heavy): favors highly credible, persistent knowledge and beliefs
+  # with slower temporal decay for stable facts and reference material.
+  evergreen:
+    w_rec: 0.2
+    w_cred: 0.9
+    w_bel: 0.7
+    decay_lambda: 0.008
+    beliefs_enabled: true
+    belief_alpha: 0.1
+    belief_importance_boost: 0.1
+    contradictions_enabled: true
+    belief_conflict_penalty: 0.05
+  # personal (recency/usage heavy): tuned for personal context, prioritizing what was used recently and often.
+  personal:
+    w_use: 0.5
+    w_rec: 0.4
+    beliefs_enabled: true
+    belief_alpha: 0.1
+    belief_importance_boost: 0.1
+    contradictions_enabled: true
+    belief_conflict_penalty: 0.05
+  # code (precision-heavy): leans on credibility and confidence to reduce hallucinations in code retrieval.
+  code:
+    w_cred: 0.7
+    w_conf: 0.5
+    beliefs_enabled: true
+    belief_alpha: 0.05
+    belief_importance_boost: 0.05
+    contradictions_enabled: true
+    belief_conflict_penalty: 0.05
