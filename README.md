@@ -2,6 +2,21 @@
 
 This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution of the private Axiom repo. It is intended for **local development and demos** only.
 
+## Quickstart (dev)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e .
+```
+
+```bash
+python -c "import axiom_agent"
+```
+
+On Homebrew Python (macOS), this is required due to PEP 668 / externally-managed environments.
+
 ## License & Use
 
 Axiom is **source-available** and free to use for **personal, academic, and research** work.
@@ -93,4 +108,20 @@ Optional (advanced): enable vector + embeddings:
 - **Docs**: `docs/`
 - **Scripts**: `scripts/`
 - **Tests**: `tests/`
+
+## Demo (no install)
+
+Run:
+
+```bash
+./apps/run_demo.sh
+```
+
+This uses `PYTHONPATH=src` and does not require pip/venv; it is intended as a quick sanity check.
+
+Optional rollback demo (expected non-zero):
+
+```bash
+AXIOM_DEMO_FORCE_FAIL=1 ./apps/run_demo.sh
+```
 
