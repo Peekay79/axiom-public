@@ -41,6 +41,7 @@ This repo **does not include** a bundled LLM runtime or a full end-to-end agent 
 ## Agent Layer (library)
 
 The agent layer is **importable Python** under `src/axiom_agent/`. It is designed to be usable without Discord, without LLMs, and without any private services.
+Agent layer presence is defined by `src/axiom_agent/MANIFEST.md`; do not remove these subpackages during cleanup/refactors.
 
 ### 1) CHAMP — decision timing + explainability
 
