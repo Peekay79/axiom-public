@@ -16,38 +16,19 @@ python -c "import axiom_agent"
 
 ## License & Use
 
-Licensed under the **PolyForm Noncommercial License 1.0.0**. See [LICENSE](./LICENSE) for terms.
+Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for the full terms.
 
-Axiom is source-available and intended for personal, academic, research, and other noncommercial use. Commercial use is not permitted under the default license.
+Commercial use is not permitted under the default license.
 
-Examples of permitted use (non-exhaustive):
-
-- ✅ Run and modify Axiom for personal projects, learning, and experimentation
-- ✅ Use Axiom in academic and research settings
-- ✅ Use it internally for noncommercial prototypes and exploration
-
-Examples of commercial use not permitted under the default license (non-exhaustive):
-
-- ❌ Offer this software or derivative works as a paid product or service
-- ❌ Use it within a revenue-generating platform or workflow
-- ❌ Deploy it in support of commercial business operations
-- ❌ Use it in exchange for money, equity, or other commercial benefit
+Nothing in this README grants rights beyond those in the LICENSE.
 
 ### Commercial Use & Partnerships
 
-Commercial rights may be available via separate licensing for aligned teams.
-
-To discuss commercial use, **open a GitHub issue titled “AXIOM LICENSING”**.
+For commercial inquiries, **open a GitHub issue titled “AXIOM LICENSING”**.
 
 ### Ethical Use
 
-The license includes an “Ethical Use Notice” that prohibits using Axiom to develop or deploy systems whose primary purpose is:
-
-- physical harm,
-- mass surveillance or repression, or
-- violation of applicable law or fundamental human rights.
-
-See [LICENSE](./LICENSE) for full terms.
+If the LICENSE includes an Ethical Use Notice, it applies as written there. See LICENSE for the exact terms.
 
 ### Quick start (local-only)
 
