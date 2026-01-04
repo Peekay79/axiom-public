@@ -1,6 +1,6 @@
 ## Axiom (public-safe build)
 
-This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution of the private Axiom repo. It is intended for **local development and demos** only.
+This directory (`axiom-public/`) is a **copy-and-sanitise** public distribution of the private Axiom repo. It is intended for **local development and demos** only.
 
 Axiom is a modular memory + recall stack (Flask Memory API, optional Qdrant vector recall) plus an optional agent layer (CHAMP decisioning, reflection/journaling, wonder exploration, and graph hooks).
 
