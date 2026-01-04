@@ -1,0 +1,84 @@
+name: Bug report
+description: Report a problem running axiom-public (minimal, high-signal).
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS + version
+      description: Example: macOS 14.2, Ubuntu 22.04, Windows 11
+      options:
+        - macOS (Intel)
+        - macOS (Apple Silicon / ARM)
+        - Linux
+        - Windows
+    validations:
+      required: true
+
+  - type: dropdown
+    id: setup_path
+    attributes:
+      label: Setup path
+      description: Choose the setup path you actually used.
+      options:
+        - Docker + Qdrant (docker-compose.qdrant.yml)
+        - Local Core Memory API (requirements-core.txt)
+        - Local Vector / Embeddings (requirements-vector.txt)
+    validations:
+      required: true
+
+  - type: input
+    id: python_version
+    attributes:
+      label: Python version
+      description: Example: 3.10.13
+      placeholder: "3.10.x"
+    validations:
+      required: true
+
+  - type: textarea
+    id: start_command
+    attributes:
+      label: Command used to start Axiom
+      description: Paste the exact command you ran (or the docker compose command).
+      render: shell
+      placeholder: |
+        docker compose -f docker-compose.qdrant.yml up --build
+
+        # or
+        MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
+    validations:
+      required: true
+
+  - type: textarea
+    id: ping
+    attributes:
+      label: Output of /ping
+      description: Paste the output (or the error) from this probe.
+      render: shell
+      placeholder: |
+        curl -fsS http://localhost:8002/ping
+    validations:
+      required: true
+
+  - type: textarea
+    id: readyz
+    attributes:
+      label: Output of /readyz
+      description: Paste the output (or the error) from this probe.
+      render: shell
+      placeholder: |
+        curl -fsS http://localhost:8002/readyz
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Optional logs (not required)
+      description: If you have a short snippet (startup traceback, container logs), paste it here. Totally optional.
+      render: shell
+    validations:
+      required: false
+
