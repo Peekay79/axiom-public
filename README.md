@@ -16,11 +16,11 @@ python -c "import axiom_agent"
 
 ## License & Use
 
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for the full terms.
+Licensed under the PolyForm Noncommercial License 1.0.0. See [LICENSE](./LICENSE) for the full terms.
 
 Commercial use is not permitted under the default license.
 
-Nothing in this README grants rights beyond those in the LICENSE.
+Nothing in this README grants rights beyond those in the [LICENSE](./LICENSE).
 
 ### Commercial Use & Partnerships
 
@@ -28,7 +28,7 @@ For commercial inquiries, **open a GitHub issue titled “AXIOM LICENSING”**.
 
 ### Ethical Use
 
-If the LICENSE includes an Ethical Use Notice, it applies as written there. See LICENSE for the exact terms.
+If the [LICENSE](./LICENSE) includes an Ethical Use Notice, it applies as written there. See [LICENSE](./LICENSE) for the exact terms.
 
 ### Quick start (local-only)
 
@@ -68,6 +68,7 @@ Optional (advanced): enable vector + embeddings:
 ### Layout
 
 - **Core library**: `src/axiom/`
+- **Agent layer**: `src/axiom_agent/`
 - **Services**: `services/` (memory/vector/cockpit)
 - **Docs**: `docs/`
 - **Scripts**: `scripts/`
