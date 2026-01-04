@@ -37,13 +37,14 @@ Vector synchronization enables semantic search capabilities by storing embedding
 # Method 1: Environment variables
 export AX_VECTOR_SYNC=true
 export AX_QDRANT_URL=http://localhost:6333
-python ingest_world_map.py --force
+# NOTE: the private `ingest_world_map.py` CLI is not shipped in this public-safe tree.
+# For local demos, run the Memory API + Qdrant and use the Memory API endpoints instead.
 
 # Method 2: Command line flag
-python ingest_world_map.py --vector-sync --force
+# (not available in public-safe tree)
 
 # Method 3: Docker environment
-docker-compose up -d  # Services configured with vector sync
+docker compose -f docker-compose.qdrant.yml up -d  # Qdrant + Memory
 ```
 
 ### Remote Qdrant Setup
@@ -114,23 +115,14 @@ curl http://localhost:5000/api/memory-stats | jq
 
 ### Required Dependencies
 ```bash
-# Install vector extras (required for vector sync)
-pip install -e .[vector]
-
-# Manual installation of vector dependencies
-pip install qdrant-client>=1.9.0
-pip install sentence-transformers>=2.5.0
-pip install transformers>=4.40
-pip install torch==2.1.2  # Linux/Windows
+# Install service requirements (public-safe tree)
+pip install -r services/memory/requirements.txt
 ```
 
 ### Optional Dependencies
 ```bash
-# Development dependencies
-pip install -e .[dev]
-
-# Full installation with all extras
-pip install -e .[vector,dev]
+# This public-safe tree does not ship a `pyproject.toml` with extras.
+# Install per-service requirements from `services/*/requirements.txt`.
 ```
 
 ## Lazy Loading & Fallback
@@ -156,17 +148,17 @@ pip install -e .[vector,dev]
 **Qdrant connection refused:**
 ```bash
 # Check if Qdrant is running
-docker-compose ps
+docker compose -f docker-compose.qdrant.yml ps
 curl $AX_QDRANT_URL/health
 
 # Start Qdrant if needed
-docker-compose up -d qdrant
+docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant
 ```
 
 **Vector dependencies missing:**
 ```bash
-# Install vector extras
-pip install -e .[vector]
+# Install service requirements (public-safe tree)
+pip install -r services/memory/requirements.txt
 
 # Check installation
 python -c "import sentence_transformers; print('OK')"
@@ -179,8 +171,11 @@ python -c "import torch; print('OK')"
 curl $AX_QDRANT_URL/collections | jq
 
 # Collections are created automatically on first use
-# Run ingestion to create collections
-python ingest_world_map.py --dry-run --vector-sync
+# If you have `world_map.json`, start the Memory API and hit a vector endpoint
+# (this will create collections lazily when the vector backend is enabled).
+# Example:
+#   MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
+#   curl -fsS http://localhost:8002/vector/query -H 'Content-Type: application/json' -d '{"query":"hello","top_k":3}'
 ```
 
 **Performance issues:**
@@ -197,7 +192,7 @@ echo $EMBEDDING_MODEL  # Should be all-MiniLM-L6-v2
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=DEBUG
-python ingest_world_map.py --vector-sync --dry-run --verbose
+# (No ingestion CLI in this public-safe tree; prefer the Memory API + curl checks.)
 
 # Test embedding generation
 python -c "
@@ -248,13 +243,13 @@ axiom_memory:
 ### Service Health Checks
 ```bash
 # Check all services
-docker-compose ps
+docker compose -f docker-compose.qdrant.yml ps
 
 # Check Qdrant logs
-docker-compose logs qdrant
+docker compose -f docker-compose.qdrant.yml logs axiom_qdrant
 
 # Check memory service logs  
-docker-compose logs axiom_memory
+docker compose -f docker-compose.qdrant.yml logs axiom_memory
 ```
 
 For ingestion workflow, see `docs/INGEST_WORLD_MAP.md`. For schema details, see `docs/SCHEMA.md`.

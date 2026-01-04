@@ -53,11 +53,22 @@ See [LICENSE](./LICENSE) for full terms.
 
 ### Quick start (local-only)
 
+For a full, friendly walkthrough, see `1GETTING_STARTED.md`.
+
 - **Install**:
   - `python -m venv .venv && . .venv/bin/activate`
   - `pip install -r services/memory/requirements.txt`
 - **Run the Memory API (dev)**:
-  - `PYTHONPATH=. MEMORY_POD_URL=http://localhost:8002 python -m pods.memory.pod2_memory_api`
+  - `MEMORY_API_PORT=8002 MEMORY_POD_URL=http://localhost:8002 python -m pods.memory.pod2_memory_api`
+
+### Quick start (Docker: Qdrant + Memory)
+
+- **Copy env template**:
+  - `cp configs/.env.example .env`
+- **Run**:
+  - `docker compose -f docker-compose.qdrant.yml up --build`
+- **Health**:
+  - `curl -fsS http://localhost:8002/ping && curl -fsS http://localhost:8002/readyz`
 
 ### Configuration
 

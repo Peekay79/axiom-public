@@ -9,48 +9,46 @@ This guide explains how to ingest world map data into the Axiom system for visua
 
 ## Overview
 
-The `ingest_world_map.py` script ingests structured world map data into the Stevebot memory system, converting entities and relationships into memory entries with optional vector synchronization to Qdrant.
+This public-safe repo does **not** ship the private `ingest_world_map.py` / `tools/*` ingestion CLIs.
+
+Instead, the recommended local/demo workflow is:
+
+- Keep a private `world_map.json` (do not commit it)
+- Run the Memory API, which automatically loads `world_map.json` and exposes world-map endpoints
+- Trigger reloads via `POST /world_map/reload`
 
 ## Schema Requirements
 
 - **Schema v1**: Uses arrays for `entities` and `relationships` with required `version` field (`1.x.y`)
 - **Canonical format**: See `docs/SCHEMA.md` for complete specification
 - **Dual-shape support**: Accepts both legacy dict-shaped and canonical array-shaped input
-- **Schema validation**: Use `make schema` or `python tools/validate_world_map.py world_map.json`
+- **Schema validation**: Use the shipped parser (pydantic) from `services/memory/world_map_models.py` (see Troubleshooting)
 
 ## Command Line Usage
 
 ### Basic Commands
 
 ```bash
-# Preview changes (recommended first step)
-python ingest_world_map.py --dry-run --verbose
-make ingest-dry
+# Create a private world map file from the example (do NOT commit it)
+cp examples/world_map.example.json world_map.json
 
-# Basic ingestion (fallback store only)
-python ingest_world_map.py --force --verbose
+# Run Memory API (local)
+python -m venv .venv && . .venv/bin/activate
+pip install -r services/memory/requirements.txt
+MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
 
-# With vector sync to Qdrant
-AX_VECTOR_SYNC=true python ingest_world_map.py --force --verbose --vector-sync
-
-# Normalize source file during ingestion (explicit only)
-python ingest_world_map.py --force --normalize-output
+# Reload world map (if you've edited world_map.json)
+curl -fsS -X POST http://localhost:8002/world_map/reload
 ```
 
 ### Available Flags
 
-- `--dry-run`: Preview what would be ingested without making changes
-- `--force`: Skip safety confirmation and proceed with ingestion  
-- `--vector-sync`: Enable vector database synchronization to Qdrant
-- `--normalize-output`: Write normalized array-based schema to source file (explicit only)
-- `--verbose`: Enable detailed logging output
-- `--world-map-path PATH`: Use custom world map file (default: `world_map.json`)
+N/A in the public-safe tree (the ingestion CLI is not included).
 
 ### Environment Variables
 
-- `AX_VECTOR_SYNC=true`: Enable vector sync (alternative to `--vector-sync`)
-- `AX_QDRANT_URL`: Qdrant base URL (default: `http://localhost:6333`)
-- `EMBEDDING_MODEL`: Model for embeddings (default: `all-MiniLM-L6-v2`)
+- `WORLD_MAP_PATH`: Optional override for where the Memory API loads `world_map.json` from.
+- `QDRANT_URL` / `QDRANT_HOST` / `QDRANT_PORT`: Qdrant connection for vector-backed features.
 
 ## How Ingestion Works
 
@@ -80,12 +78,9 @@ python ingest_world_map.py --force --normalize-output
 
 ### Manual Normalization
 ```bash
-# Normalize to canonical arrays (recommended)
-python tools/normalize_world_map.py world_map.json -o world_map.json
-make normalize
-
-# In-place normalization
-python tools/normalize_world_map.py world_map.json --in-place
+# This public-safe tree does not ship the private normalization CLI.
+# The shipped parser returns a normalized dict as its second return value:
+python -c "import json; from services.memory.world_map_models import parse_world_map; raw=json.load(open('world_map.json')); _typed,norm,_warn=parse_world_map(raw); print('✅ normalized entities=',len(norm.get('entities',[])),'relationships=',len(norm.get('relationships',[])))"
 ```
 
 ## Success Indicators
@@ -110,20 +105,20 @@ python tools/normalize_world_map.py world_map.json --in-place
 
 **Schema validation errors:**
 ```bash
-make schema  # Check for validation errors
-make normalize  # Convert to canonical format if needed
+# Validate shape via the shipped parser (pydantic)
+python -c "import json; from services.memory.world_map_models import parse_world_map; parse_world_map(json.load(open('world_map.json'))); print('✅ world_map.json parsed')"
 ```
 
 **Vector dependencies missing:**
 ```bash
-pip install -e .[vector]  # Install vector extras
-# Or disable vector sync: AX_VECTOR_SYNC=false
+# Install service requirements (includes qdrant-client and sentence-transformers)
+pip install -r services/memory/requirements.txt
 ```
 
 **Qdrant connection failed:**
 ```bash
-curl $AX_QDRANT_URL/health  # Test connectivity
-docker-compose up -d qdrant  # Start Qdrant if needed
+curl -fsS http://localhost:6333/health  # Test connectivity
+docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant  # Start Qdrant if needed
 ```
 
 **Memory manager not available:**
@@ -133,11 +128,8 @@ docker-compose up -d qdrant  # Start Qdrant if needed
 ### Debugging
 
 ```bash
-# Enable verbose logging
-python ingest_world_map.py --dry-run --verbose
-
-# Check world map structure
-python tools/validate_world_map.py world_map.json
+# Check world map structure via the shipped parser
+python -c "import json; from services.memory.world_map_models import parse_world_map; parse_world_map(json.load(open('world_map.json'))); print('✅ world_map.json parsed')"
 
 # Test vector connectivity
 curl http://localhost:6333/collections
@@ -145,10 +137,14 @@ curl http://localhost:6333/collections
 
 ## Integration Notes
 
-- **Memory manager**: Uses `pods.memory.MemoryManager` for storage
+- **World-map endpoints** (Memory API):
+  - `GET /world_map/entity/<entity_id>`
+  - `GET /world_map/relationships?entity_id=<id>&direction=any|out|in`
+  - `GET /world_map/profile/<entity_id>`
+  - `POST /world_map/reload`
 - **Lazy imports**: Vector dependencies loaded only when needed
 - **Graceful fallback**: Continues operation if vector sync fails
-- **Dual-shape parsing**: Handled by `pods.memory.world_map_models.parse_world_map`
+- **Dual-shape parsing**: Handled by `services/memory/world_map_models.py` (`parse_world_map`)
 
 For schema details, see `docs/SCHEMA.md`. For vector setup, see `docs/VECTOR_SYNC.md`.
 
