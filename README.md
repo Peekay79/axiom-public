@@ -2,6 +2,11 @@
 
 This directory (`axiom-public/`) is a **copy-and-sanitize** public distribution of the private Axiom repo. It is intended for **local development and demos** only.
 
+## Docs
+
+- [Systems overview (services + agent layer)](docs/2SYSTEMS_OVERVIEW.md)
+- [System architecture (services)](docs/axiom_architecture_map.md)
+
 ## Quickstart (dev)
 
 On Homebrew Python (macOS), PEP 668 marks the system environment as externally managed; use a virtual environment for installs.
@@ -16,7 +21,7 @@ python -c "import axiom_agent"
 
 ## License & Use
 
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for the full terms.
+Licensed under the **PolyForm Noncommercial License 1.0.0** (see [LICENSE](./LICENSE)).
 
 Commercial use is not permitted under the default license.
 
@@ -24,7 +29,7 @@ Nothing in this README grants rights beyond those in the LICENSE.
 
 ### Commercial Use & Partnerships
 
-For commercial inquiries, **open a GitHub issue titled “AXIOM LICENSING”**.
+For commercial inquiries, **open a GitHub issue titled `AXIOM LICENSING`**.
 
 ### Ethical Use
 
