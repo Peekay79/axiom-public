@@ -20,6 +20,7 @@ If you get stuck, open an issue — or email `kurtbannister79@gmail.com` with su
 - [Optional: Protecting your Memory API (bearer token)](#7-optional-protecting-your-memory-api-bearer-token)
 - [Optional: Cockpit status server](#8-optional-cockpit-status-server)
 - [Next steps](#9-next-steps)
+- [Why two dependency profiles?](#10-why-two-dependency-profiles)
 
 ## 1. Prerequisites
 
@@ -82,13 +83,40 @@ cd axiom-public
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install -r services/memory/requirements.txt
+pip install -r services/memory/requirements-core.txt
 
 MEMORY_API_PORT=8002 python -m pods.memory.pod2_memory_api
 
 curl -fsS http://localhost:8002/ping
 curl -fsS http://localhost:8002/readyz
 ```
+
+Runs Axiom Memory API in **fallback mode** *(no vector DB, no embeddings, no Rust required)*.
+
+This runs **Axiom Memory API in fallback mode**:
+
+- no vector DB required
+- no embeddings / HuggingFace stack
+- **no Rust toolchain required**
+
+### Optional: Vector / Embeddings mode (advanced)
+
+If you want semantic recall + embedding adapters, install the vector profile:
+
+```bash
+pip install -r services/memory/requirements-vector.txt
+```
+
+Notes:
+
+- **May require a Rust toolchain** on some systems (commonly macOS / ARM) due to `tokenizers`
+- Recommended if you’re using **Qdrant** or want **semantic recall**
+- Safe to ignore when experimenting
+
+Core vs Vector:
+
+- **Core** = cognition + journaling + beliefs
+- **Vector** = semantic recall + embeddings + rerank
 
 ## 6. Basic health & sanity checks
 
@@ -139,4 +167,13 @@ curl -fsS http://localhost:8088/status/cockpit | python -m json.tool
 - `AXIOM_RUNABILITY_AUDIT.md`: run surfaces, known gaps, and quick checks
 - `docs/INGEST_WORLD_MAP.md`: using world-map endpoints in the public tree
 - `docs/HYBRID_RETRIEVAL.md`: retrieval design notes
+
+## 10. Why two dependency profiles?
+
+Some Python packages used for local embeddings (notably `tokenizers` / `transformers`) can require a **Rust toolchain** to compile on certain platforms.
+
+To keep first-run setup friendly and reliable:
+
+- **`requirements-core.txt`**: runs the Memory API in fallback mode (no Rust / no HuggingFace stack)
+- **`requirements-vector.txt`**: keeps full vector + embedding functionality available, but opt-in
 

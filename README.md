@@ -57,9 +57,15 @@ For a full, friendly walkthrough, see `1GETTING_STARTED.md`.
 
 - **Install**:
   - `python -m venv .venv && . .venv/bin/activate`
-  - `pip install -r services/memory/requirements.txt`
+  - `pip install -r services/memory/requirements-core.txt`
 - **Run the Memory API (dev)**:
   - `MEMORY_API_PORT=8002 MEMORY_POD_URL=http://localhost:8002 python -m pods.memory.pod2_memory_api`
+
+Runs Axiom Memory API in **fallback mode** *(no vector DB, no embeddings, no Rust required)*.
+
+Optional (advanced): enable vector + embeddings:
+
+- `pip install -r services/memory/requirements-vector.txt`
 
 ### Quick start (Docker: Qdrant + Memory)
 

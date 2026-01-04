@@ -1,0 +1,17 @@
+#
+# Axiom Memory API — Vector / Embeddings (optional, advanced)
+# ---------------------------------------------------------
+# Extends the core Memory API requirements with the full HuggingFace embedding stack.
+#
+# Note: On some systems (notably macOS / ARM), `tokenizers` may require a Rust toolchain.
+#
+-r requirements-core.txt
+
+# Local embedding stack (heavy; opt-in)
+sentence-transformers==2.2.2
+transformers<4.40
+tokenizers
+
+# Pinned for compatibility with existing public-safe tree behavior
+huggingface-hub<0.15
+

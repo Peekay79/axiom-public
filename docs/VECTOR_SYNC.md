@@ -115,8 +115,8 @@ curl http://localhost:5000/api/memory-stats | jq
 
 ### Required Dependencies
 ```bash
-# Install service requirements (public-safe tree)
-pip install -r services/memory/requirements.txt
+# Vector mode (public-safe tree)
+pip install -r services/memory/requirements-vector.txt
 ```
 
 ### Optional Dependencies
@@ -157,8 +157,8 @@ docker compose -f docker-compose.qdrant.yml up -d axiom_qdrant
 
 **Vector dependencies missing:**
 ```bash
-# Install service requirements (public-safe tree)
-pip install -r services/memory/requirements.txt
+# Install vector profile (includes HuggingFace/tokenizers stack)
+pip install -r services/memory/requirements-vector.txt
 
 # Check installation
 python -c "import sentence_transformers; print('OK')"

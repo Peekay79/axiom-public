@@ -5,8 +5,9 @@ Added optional Qdrant vector memory support to `pod2_memory_api.py` while mainta
 
 ## Files Modified
 
-### 1. `requirements.txt`
-- Added `qdrant-client>=1.8.0` dependency
+### 1. Dependencies
+- `qdrant-client>=1.8.0` is part of the **core** profile (`requirements-core.txt`) so the Memory API can talk to Qdrant when configured.
+- The full local-embeddings stack is isolated to the **vector** profile (`requirements-vector.txt`).
 
 ### 2. `qdrant_utils.py` (NEW)
 - Helper functions for Qdrant operations
