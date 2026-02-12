@@ -7,8 +7,25 @@ name = "axiom-public"
 version = "0.0.0"
 description = "Public-safe Axiom build (local dev + offline demo)"
 readme = "README.md"
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = [
+    "flask",
+    "flask-cors",
+    "requests",
+    "pydantic>=2.0.0,<3.0.0",
+    "qdrant-client>=1.8.0",
+]
+
+[project.optional-dependencies]
+vector = [
+    "sentence-transformers==2.2.2",
+    "transformers<4.40",
+    "tokenizers",
+    "huggingface-hub<0.15",
+]
+dev = [
+    "pytest",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
