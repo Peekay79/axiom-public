@@ -319,6 +319,47 @@ def _log_degraded_if_needed():
     except Exception:
         pass
 
+
+def _print_startup_banner():
+    """Print a human-readable summary of active subsystems on startup."""
+    import os
+    lines = [
+        "",
+        "=" * 60,
+        "  AXIOM MEMORY API — Startup Summary",
+        "=" * 60,
+    ]
+
+    # Detect mode
+    use_qdrant = os.getenv("USE_QDRANT_BACKEND", "").strip().lower() in ("1", "true", "yes")
+    mode = "Vector (Qdrant)" if use_qdrant else "Core (JSON fallback)"
+    lines.append(f"  Mode:              {mode}")
+
+    # Auth
+    auth = os.getenv("AXIOM_AUTH_ENABLED", "").strip().lower() in ("1", "true", "yes")
+    lines.append(f"  Auth:              {'ENABLED' if auth else 'disabled'}")
+
+    # Composite scoring
+    scoring = os.getenv("AXIOM_COMPOSITE_SCORING", "").strip().lower() in ("1", "true", "yes")
+    lines.append(f"  Composite scoring: {'enabled' if scoring else 'disabled'}")
+
+    # Canaries
+    canaries = os.getenv("AXIOM_CANARIES", "true").strip().lower() in ("1", "true", "yes")
+    lines.append(f"  Startup canaries:  {'enabled' if canaries else 'disabled'}")
+
+    # Journal vector
+    jvec = os.getenv("JOURNAL_VECTOR_ENABLED", "").strip().lower() in ("1", "true", "yes")
+    lines.append(f"  Journal → Vector:  {'enabled' if jvec else 'disabled'}")
+
+    # Port
+    port = os.getenv("MEMORY_API_PORT", os.getenv("PORT", "5000"))
+    lines.append(f"  Port:              {port}")
+
+    lines.append("=" * 60)
+    lines.append("")
+    print("\n".join(lines))
+
+
 # Governor middleware (additive, optional)
 try:
     from governor import governor_enabled, strict_mode
@@ -3326,4 +3367,5 @@ def retrieve():
 if __name__ == "__main__":
     PORT = 5000
     print("ROUTES ON START:", [r.rule for r in app.url_map.iter_rules()])
+    _print_startup_banner()
     app.run(host="0.0.0.0", port=PORT)

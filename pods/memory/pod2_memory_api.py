@@ -28,9 +28,11 @@ from services.memory.pod2_memory_api import app  # type: ignore  # noqa: F401,E4
 
 
 def main() -> None:
+    from services.memory.pod2_memory_api import _print_startup_banner
     # Allow port override for local runs (defaults to Flask 5000).
     port = int(os.getenv("MEMORY_API_PORT", os.getenv("PORT", "5000")) or 5000)
     print("ROUTES ON START:", [r.rule for r in app.url_map.iter_rules()])
+    _print_startup_banner()
     app.run(host="0.0.0.0", port=port)
 
 
